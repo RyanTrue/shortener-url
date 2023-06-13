@@ -1,9 +1,9 @@
 package main
 
 import (
-	"net/http"
-
 	h "github.com/RyanTrue/shortener-url.git/internal/app/handlers"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func run(m *http.ServeMux) error {
@@ -11,10 +11,17 @@ func run(m *http.ServeMux) error {
 }
 
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", h.HTTPHandler)
+	app := gin.Default()
 
-	if err := run(mux); err != nil {
+	app.POST("/", func(c *gin.Context) {
+		h.ShortenURL(c.Writer, c.Request)
+	})
+	app.GET("/:id", func(c *gin.Context) {
+		h.GetOriginalURL(c.Writer, c.Request)
+	})
+
+	err := app.Run(`:8080`)
+	if err != nil {
 		panic(err)
 	}
 }

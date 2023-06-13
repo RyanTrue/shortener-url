@@ -14,19 +14,6 @@ type URLData struct {
 
 var vault = make(map[string]string)
 
-func HTTPHandler(res http.ResponseWriter, req *http.Request) {
-	err := req.ParseForm()
-	if err != nil {
-		http.Error(res, "Error parsing params", http.StatusInternalServerError)
-	}
-	switch req.Method {
-	case "POST":
-		ShortenURL(res, req)
-	case "GET":
-		GetOriginalURL(res, req)
-	}
-}
-
 func ShortenURL(res http.ResponseWriter, req *http.Request) {
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
@@ -34,11 +21,6 @@ func ShortenURL(res http.ResponseWriter, req *http.Request) {
 			fmt.Printf("Error closing Body: %v", err)
 		}
 	}(req.Body)
-
-	if req.Method != http.MethodPost && req.Method != http.MethodGet {
-		http.Error(res, "Only POST and GET methods allowed", http.StatusMethodNotAllowed)
-		return
-	}
 
 	body, err := io.ReadAll(req.Body)
 	if err != nil {
