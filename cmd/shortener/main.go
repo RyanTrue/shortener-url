@@ -1,6 +1,7 @@
 package main
 
 import (
+	f "github.com/RyanTrue/shortener-url.git/cmd/shortener/config"
 	h "github.com/RyanTrue/shortener-url.git/internal/app/handlers"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -11,6 +12,7 @@ func run(m *http.ServeMux) error {
 }
 
 func main() {
+	f.ParseFlags()
 	app := gin.Default()
 
 	app.POST("/", func(c *gin.Context) {
@@ -19,8 +21,7 @@ func main() {
 	app.GET("/:id", func(c *gin.Context) {
 		h.GetOriginalURL(c.Writer, c.Request)
 	})
-
-	err := app.Run(`:8080`)
+	err := app.Run(f.ServerAddr)
 	if err != nil {
 		panic(err)
 	}
