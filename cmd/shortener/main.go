@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	h "github.com/RyanTrue/shortener-url.git/internal/app/handler"
+	h "github.com/RyanTrue/shortener-url.git/internal/app/handlers"
 )
 
 func run(m *http.ServeMux) error {
