@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"bytes"
-	"fmt"
+	f "github.com/RyanTrue/shortener-url.git/cmd/shortener/config"
 	"net/http/httptest"
 	"testing"
 
@@ -19,6 +19,7 @@ type want struct {
 }
 
 func TestShortenURL(t *testing.T) {
+	f.ParseFlags()
 
 	tests := []struct {
 		name   string
@@ -101,8 +102,6 @@ func TestGetOriginalURL(t *testing.T) {
 			w := httptest.NewRecorder()
 
 			GetOriginalURL(w, r)
-
-			fmt.Println(vault)
 
 			assert.Equal(t, test.want.code, w.Code, "Wrong response code")
 
