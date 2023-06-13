@@ -2,10 +2,10 @@ package main
 
 import (
 	"flag"
-	"github.com/RyanTrue/shortener-url.git/cmd/shortener/config"
-	server "github.com/RyanTrue/shortener-url.git/internal/app"
-	"github.com/RyanTrue/shortener-url.git/internal/app/handler"
-	"github.com/RyanTrue/shortener-url.git/internal/app/storage"
+	"github.com/RyanTrue/shortener-url.git/internal/common/config"
+	"github.com/RyanTrue/shortener-url.git/internal/common/server"
+	"github.com/RyanTrue/shortener-url.git/internal/common/server/handler"
+	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
 	"log"
 )
 

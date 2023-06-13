@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/RyanTrue/shortener-url.git/internal/app/storage"
+	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
 	"github.com/gin-gonic/gin"
 )
 

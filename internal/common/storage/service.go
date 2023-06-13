@@ -1,6 +1,8 @@
 package storage
 
-import "github.com/RyanTrue/shortener-url.git/cmd/shortener/config"
+import (
+	"github.com/RyanTrue/shortener-url.git/internal/common/config"
+)
 
 type ServiceContainer struct {
 	URL urlService

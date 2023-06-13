@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/RyanTrue/shortener-url.git/cmd/shortener/config"
-	"github.com/RyanTrue/shortener-url.git/internal/app/storage"
+	"github.com/RyanTrue/shortener-url.git/internal/common/config"
+	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httptest"
