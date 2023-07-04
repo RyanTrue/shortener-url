@@ -1,4 +1,4 @@
-package storage
+package service
 
 import (
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"

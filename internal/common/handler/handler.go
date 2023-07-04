@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
+	"github.com/RyanTrue/shortener-url.git/internal/common/service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,10 +10,10 @@ type logger interface {
 }
 
 type Handler struct {
-	services *storage.ServiceContainer
+	services *service.ServiceContainer
 }
 
-func NewHandler(services *storage.ServiceContainer) *Handler {
+func NewHandler(services *service.ServiceContainer) *Handler {
 	return &Handler{
 		services: services,
 	}

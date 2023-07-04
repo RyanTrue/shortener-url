@@ -3,15 +3,16 @@ package handler
 import (
 	"flag"
 	"fmt"
-	"github.com/RyanTrue/shortener-url.git/internal/common/config"
-	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
-	"github.com/gin-gonic/gin"
-	"github.com/goccy/go-json"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/RyanTrue/shortener-url.git/internal/common/config"
+	"github.com/RyanTrue/shortener-url.git/internal/common/service"
+	"github.com/gin-gonic/gin"
+	"github.com/goccy/go-json"
 )
 
 func TestShortenURLjson(t *testing.T) {
@@ -69,7 +70,7 @@ func TestShortenURLjson(t *testing.T) {
 
 			c.Request, _ = http.NewRequest(test.method, test.url, strings.NewReader(string(bodyStr)))
 			h := Handler{
-				services: storage.NewServiceContainer(testVault, appConfig),
+				services: service.NewServiceContainer(testVault, appConfig),
 			}
 			h.ShortenURLjson(c)
 

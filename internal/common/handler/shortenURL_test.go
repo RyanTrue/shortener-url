@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
-	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
+	"github.com/RyanTrue/shortener-url.git/internal/common/service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -61,7 +61,7 @@ func TestShortenURL(t *testing.T) {
 			с.Request, _ = http.NewRequest(test.method, test.url, strings.NewReader(test.body))
 
 			h := Handler{
-				services: storage.NewServiceContainer(testVault, appConfig),
+				services: service.NewServiceContainer(testVault, appConfig),
 			}
 			h.ShortenURL(с)
 

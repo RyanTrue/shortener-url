@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
+	"github.com/RyanTrue/shortener-url.git/internal/common/handler"
 
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
 	"github.com/RyanTrue/shortener-url.git/internal/common/server"
-	"github.com/RyanTrue/shortener-url.git/internal/common/server/handler"
-	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
+	"github.com/RyanTrue/shortener-url.git/internal/common/service"
 	"go.uber.org/zap"
 )
 
@@ -24,7 +24,7 @@ func main() {
 
 	repo := make(map[string]string)
 
-	services := storage.NewServiceContainer(repo, appConfig)
+	services := service.NewServiceContainer(repo, appConfig)
 	handler := handler.NewHandler(services)
 	server := new(server.Server)
 
