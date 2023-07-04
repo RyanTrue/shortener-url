@@ -5,6 +5,8 @@ import (
 	"github.com/RyanTrue/shortener-url.git/internal/common/handler"
 	"github.com/RyanTrue/shortener-url.git/internal/common/server"
 	"github.com/RyanTrue/shortener-url.git/internal/common/service"
+
+	_ "github.com/lib/pq"
 	"go.uber.org/zap"
 )
 
@@ -34,7 +36,14 @@ func main() {
 		panic(err)
 	}
 
-	services, err := service.NewServiceContainer(repo, appConfig, storage)
+	db, err := repository.NewPostgresDB(appConfig.DataBase.ConnectionStr)
+	if err != nil {
+		panic(err)
+	}
+
+	PostgresRepo := repository.NewRepository(db)
+
+	services, err := service.NewServiceContainer(repo, appConfig, storage, PostgresRepo)
 	if err != nil {
 		panic(err)
 	}
