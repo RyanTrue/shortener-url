@@ -2,9 +2,9 @@ package main
 
 import (
 	"flag"
-	"github.com/RyanTrue/shortener-url.git/internal/common/handler"
 
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
+	"github.com/RyanTrue/shortener-url.git/internal/common/handler"
 	"github.com/RyanTrue/shortener-url.git/internal/common/server"
 	"github.com/RyanTrue/shortener-url.git/internal/common/service"
 	"go.uber.org/zap"
