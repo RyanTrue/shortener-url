@@ -2,12 +2,12 @@ package main
 
 import (
 	"flag"
-	"log"
+	"github.com/RyanTrue/shortener-url.git/internal/common/handler"
 
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
 	"github.com/RyanTrue/shortener-url.git/internal/common/server"
-	"github.com/RyanTrue/shortener-url.git/internal/common/server/handler"
-	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
+	"github.com/RyanTrue/shortener-url.git/internal/common/service"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -15,11 +15,20 @@ func main() {
 	appConfig.InitAppConfig()
 	flag.Parse()
 
-	services := storage.NewServiceContainer(make(map[string]string), appConfig)
-	handler := handler.NewHandler(services)
-	server := &server.Server{}
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		panic(err)
+	}
+	defer logger.Sync()
+	sugar := logger.Sugar()
 
-	if err := server.Run(appConfig.Server.ServerAddr, handler.InitRoutes()); err != nil {
-		log.Fatal(err)
+	repo := make(map[string]string)
+
+	services := service.NewServiceContainer(repo, appConfig)
+	handler := handler.NewHandler(services)
+	server := new(server.Server)
+
+	if err := server.Run(appConfig.Server.ServerAddr, handler.InitRoutes(sugar)); err != nil {
+		panic(err)
 	}
 }

@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
-	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
+	"github.com/RyanTrue/shortener-url.git/internal/common/service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +17,7 @@ func TestShortenURL(t *testing.T) {
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	appConfig := config.AppConfig{}
 	appConfig.InitAppConfig()
+
 	var testVault = make(map[string]string)
 	type want struct {
 		code     int
@@ -53,7 +54,6 @@ func TestShortenURL(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		test := test
 		t.Run(test.name, func(t *testing.T) {
 			w := httptest.NewRecorder()
 			с, _ := gin.CreateTestContext(w)
@@ -61,7 +61,7 @@ func TestShortenURL(t *testing.T) {
 			с.Request, _ = http.NewRequest(test.method, test.url, strings.NewReader(test.body))
 
 			h := Handler{
-				services: storage.NewServiceContainer(testVault, appConfig),
+				services: service.NewServiceContainer(testVault, appConfig),
 			}
 			h.ShortenURL(с)
 
