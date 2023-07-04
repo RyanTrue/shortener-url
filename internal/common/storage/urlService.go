@@ -27,6 +27,7 @@ func (u *urlService) ShortenURL(body string) string {
 func (u *urlService) ExpandURL(path string) (string, error) {
 	if value, ok := u.repo[path]; ok {
 		return value, nil
+	} else {
+		return "", fmt.Errorf("URL path '%s' not found", path)
 	}
-	return "", fmt.Errorf("URL path '%s' not found", path)
 }
