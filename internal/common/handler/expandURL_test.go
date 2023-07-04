@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
-	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
+	"github.com/RyanTrue/shortener-url.git/internal/common/service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -51,7 +51,6 @@ func TestExpandURL(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		test := test
 		t.Run(test.name, func(t *testing.T) {
 			w := httptest.NewRecorder()
 			c, _ := gin.CreateTestContext(w)
@@ -59,7 +58,7 @@ func TestExpandURL(t *testing.T) {
 			c.Request, _ = http.NewRequest(test.method, test.url, strings.NewReader(""))
 			c.AddParam("id", test.id)
 			h := Handler{
-				services: storage.NewServiceContainer(testVault, appConfig),
+				services: service.NewServiceContainer(testVault, appConfig),
 			}
 			h.ExpandURL(c)
 			if c.Writer.Status() != test.want.code {
