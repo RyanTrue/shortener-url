@@ -2,11 +2,12 @@ package main
 
 import (
 	"flag"
+	"log"
+
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
 	"github.com/RyanTrue/shortener-url.git/internal/common/server"
 	"github.com/RyanTrue/shortener-url.git/internal/common/server/handler"
 	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
-	"log"
 )
 
 func main() {

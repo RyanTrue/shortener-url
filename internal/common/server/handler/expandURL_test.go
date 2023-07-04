@@ -1,13 +1,14 @@
 package handler
 
 import (
-	"github.com/RyanTrue/shortener-url.git/internal/common/config"
-	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/RyanTrue/shortener-url.git/internal/common/config"
+	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
+	"github.com/gin-gonic/gin"
 )
 
 func TestExpandURL(t *testing.T) {

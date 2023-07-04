@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
+
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
 )
 
