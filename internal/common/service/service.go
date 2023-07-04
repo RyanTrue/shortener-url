@@ -8,11 +8,14 @@ type ServiceContainer struct {
 	URL urlService
 }
 
-func NewServiceContainer(repo map[string]string, config config.AppConfig) *ServiceContainer {
-	return &ServiceContainer{
-		URL: urlService{
-			repo:   repo,
-			config: config,
-		},
+func NewServiceContainer(repo map[string]string, config config.AppConfig, storage *Storage) (*ServiceContainer, error) {
+	URLService := urlService{
+		repo:    repo,
+		config:  config,
+		storage: storage,
 	}
+
+	return &ServiceContainer{
+		URL: URLService,
+	}, nil
 }

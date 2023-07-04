@@ -1,8 +1,6 @@
 package main
 
 import (
-	"flag"
-
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
 	"github.com/RyanTrue/shortener-url.git/internal/common/handler"
 	"github.com/RyanTrue/shortener-url.git/internal/common/server"
@@ -12,8 +10,10 @@ import (
 
 func main() {
 	appConfig := config.AppConfig{}
-	appConfig.InitAppConfig()
-	flag.Parse()
+	err := appConfig.InitAppConfig()
+	if err != nil {
+		panic(err)
+	}
 
 	logger, err := zap.NewDevelopment()
 	if err != nil {
@@ -24,7 +24,20 @@ func main() {
 
 	repo := make(map[string]string)
 
-	services := service.NewServiceContainer(repo, appConfig)
+	storage, err := service.NewStorage(appConfig.Server.TempFolder)
+	if err != nil {
+		panic(err)
+	}
+
+	err = storage.Read(&repo)
+	if err != nil {
+		panic(err)
+	}
+
+	services, err := service.NewServiceContainer(repo, appConfig, storage)
+	if err != nil {
+		panic(err)
+	}
 	handler := handler.NewHandler(services)
 	server := new(server.Server)
 
