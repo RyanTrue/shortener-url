@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/RyanTrue/shortener-url.git/internal/common/config"
+	"github.com/RyanTrue/shortener-url.git/internal/app/config"
 )
 
 type ServiceContainer struct {

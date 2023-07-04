@@ -3,10 +3,10 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/RyanTrue/shortener-url.git/internal/app/models"
 	"io"
 	"net/http"
 
-	"github.com/RyanTrue/shortener-url.git/internal/models"
 	"github.com/gin-gonic/gin"
 )
 

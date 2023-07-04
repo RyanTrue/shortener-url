@@ -8,7 +8,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/RyanTrue/shortener-url.git/internal/models"
+	"github.com/RyanTrue/shortener-url.git/internal/app/models"
 )
 
 type Storage struct {

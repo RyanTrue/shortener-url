@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/RyanTrue/shortener-url.git/internal/common/config"
-	"github.com/RyanTrue/shortener-url.git/internal/models"
+	"github.com/RyanTrue/shortener-url.git/internal/app/config"
+	"github.com/RyanTrue/shortener-url.git/internal/app/models"
 )
 
 type urlService struct {

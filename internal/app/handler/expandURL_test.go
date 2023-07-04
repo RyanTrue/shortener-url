@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/RyanTrue/shortener-url.git/internal/common/config"
-	"github.com/RyanTrue/shortener-url.git/internal/common/service"
+	"github.com/RyanTrue/shortener-url.git/internal/app/config"
+	"github.com/RyanTrue/shortener-url.git/internal/app/service"
 	"github.com/gin-gonic/gin"
 )
 
