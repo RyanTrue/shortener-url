@@ -1,25 +1,41 @@
 package main
 
 import (
-	"flag"
-	"log"
-
-	"github.com/RyanTrue/shortener-url.git/internal/common/config"
-	"github.com/RyanTrue/shortener-url.git/internal/common/server"
-	"github.com/RyanTrue/shortener-url.git/internal/common/server/handler"
-	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
+	"github.com/RyanTrue/shortener-url.git/internal/app/config"
+	"github.com/RyanTrue/shortener-url.git/internal/app/handler"
+	"github.com/RyanTrue/shortener-url.git/internal/app/server"
+	"github.com/RyanTrue/shortener-url.git/internal/app/service"
+	"go.uber.org/zap"
 )
 
 func main() {
 	appConfig := config.AppConfig{}
-	appConfig.InitAppConfig()
-	flag.Parse()
-
-	services := storage.NewServiceContainer(make(map[string]string), appConfig)
+	err := appConfig.InitAppConfig()
+	if err != nil {
+		panic(err)
+	}
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		panic(err)
+	}
+	defer logger.Sync()
+	sugar := logger.Sugar()
+	repo := make(map[string]string)
+	storage, err := service.NewStorage(appConfig.Server.TempDirectory)
+	if err != nil {
+		panic(err)
+	}
+	err = storage.Read(&repo)
+	if err != nil {
+		panic(err)
+	}
+	services, err := service.NewServiceContainer(repo, appConfig, storage)
+	if err != nil {
+		panic(err)
+	}
 	handler := handler.NewHandler(services)
-	server := &server.Server{}
-
-	if err := server.Run(appConfig.Server.ServerAddr, handler.InitRoutes()); err != nil {
-		log.Fatal(err)
+	server := new(server.Server)
+	if err := server.Run(appConfig.Server.ServerAddr, handler.InitRoutes(sugar)); err != nil {
+		panic(err)
 	}
 }
