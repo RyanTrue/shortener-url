@@ -16,10 +16,10 @@ func TestExpandURL(t *testing.T) {
 	cfg := config.AppConfig{}
 	cfg.Server.DefaultAddr = "http://localhost:8080"
 	cfg.Server.ServerAddr = ":8080"
-	cfg.Server.TempFolder = "/tmp/short-url-db.json"
+	cfg.Server.TempDirectory = "/tmp/short-url-db.json"
 
 	var testVault = map[string]string{"e9db20b2": "https://yandex.ru"}
-	storage, err := service.NewStorage(cfg.Server.TempFolder)
+	storage, err := service.NewStorage(cfg.Server.TempDirectory)
 	if err != nil {
 		fmt.Printf("Failed to create test storage: %v", err)
 		return
