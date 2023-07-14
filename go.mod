@@ -3,8 +3,10 @@ module github.com/RyanTrue/shortener-url.git
 go 1.20
 
 require (
+	github.com/caarlos0/env/v6 v6.10.1
 	github.com/gin-gonic/gin v1.9.1
 	github.com/goccy/go-json v0.10.2
+	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.9
 	go.uber.org/zap v1.24.0
 )

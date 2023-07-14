@@ -1,13 +1,10 @@
 package handler
 
 import (
+	"github.com/RyanTrue/shortener-url.git/internal/common/middlewares"
 	"github.com/RyanTrue/shortener-url.git/internal/common/service"
 	"github.com/gin-gonic/gin"
 )
-
-type logger interface {
-	Infof(template string, args ...interface{})
-}
 
 type Handler struct {
 	services *service.ServiceContainer
@@ -19,12 +16,13 @@ func NewHandler(services *service.ServiceContainer) *Handler {
 	}
 }
 
-func (h Handler) InitRoutes(lg logger) *gin.Engine {
+func (h Handler) InitRoutes(lg middlewares.Logger) *gin.Engine {
 	router := gin.New()
-	router.Use(h.logReqResInfo(lg), h.decompressData())
+	router.Use(middlewares.LogReqResInfo(lg), middlewares.DataCompressor())
 
 	router.POST("/", h.ShortenURL)
 	router.GET("/:id", h.ExpandURL)
+	router.GET("/ping", h.pingDB)
 
 	api := router.Group("/api")
 	{

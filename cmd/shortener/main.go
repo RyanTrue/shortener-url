@@ -1,10 +1,13 @@
 package main
 
 import (
-	"github.com/RyanTrue/shortener-url.git/internal/app/config"
-	"github.com/RyanTrue/shortener-url.git/internal/app/handler"
-	"github.com/RyanTrue/shortener-url.git/internal/app/server"
-	"github.com/RyanTrue/shortener-url.git/internal/app/service"
+	"github.com/RyanTrue/shortener-url.git/internal/common/config"
+	"github.com/RyanTrue/shortener-url.git/internal/common/handler"
+	"github.com/RyanTrue/shortener-url.git/internal/common/repository"
+	"github.com/RyanTrue/shortener-url.git/internal/common/server"
+	"github.com/RyanTrue/shortener-url.git/internal/common/service"
+
+	_ "github.com/lib/pq"
 	"go.uber.org/zap"
 )
 

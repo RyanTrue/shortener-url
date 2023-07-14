@@ -7,11 +7,13 @@ import (
 	"strconv"
 
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
+	"github.com/RyanTrue/shortener-url.git/internal/common/repository"
 	"github.com/RyanTrue/shortener-url.git/internal/models"
 )
 
 type urlService struct {
 	repo    map[string]string
+	db      *repository.Repository
 	config  config.AppConfig
 	storage *Storage
 }
