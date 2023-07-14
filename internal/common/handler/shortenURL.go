@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"fmt"
 	"io"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,22 +13,25 @@ func (h *Handler) ShortenURL(c *gin.Context) {
 
 	defer func(body io.ReadCloser) {
 		if err := body.Close(); err != nil {
-			log.Fatal(err)
+			fmt.Printf("Failed to close body: %v", err)
 		}
 	}(body)
 
 	data, err := io.ReadAll(body)
 	if err != nil {
-		http.Error(c.Writer, "Error reading request body", http.StatusInternalServerError)
+		c.Writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	if len(data) == 0 {
-		http.Error(c.Writer, "", http.StatusBadRequest)
+	if string(data) == "" {
+		c.Writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	bodyStr := string(data)
-	shortURL := h.services.URL.ShortenURL(bodyStr)
+	shortURL, err := h.services.URL.ShortenURL(bodyStr)
+	if err != nil {
+		c.Writer.WriteHeader(http.StatusInternalServerError)
+	}
 
 	c.String(http.StatusCreated, shortURL)
 }

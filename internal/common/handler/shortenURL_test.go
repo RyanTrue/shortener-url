@@ -1,22 +1,29 @@
 package handler
 
 import (
-	"flag"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"testing"
 
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
-	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
+	"github.com/RyanTrue/shortener-url.git/internal/common/service"
 	"github.com/gin-gonic/gin"
 )
 
 func TestShortenURL(t *testing.T) {
-	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	appConfig := config.AppConfig{}
-	appConfig.InitAppConfig()
+	cfg := config.AppConfig{}
+	cfg.Server.DefaultAddr = "http://localhost:8080"
+	cfg.Server.ServerAddr = ":8080"
+	cfg.Server.TempDirectory = "/tmp/short-url-db.json"
+
+	storage, err := service.NewStorage(cfg.Server.TempDirectory)
+	if err != nil {
+		fmt.Printf("Failed to create test storage: %v", err)
+		return
+	}
+
 	var testVault = make(map[string]string)
 	type want struct {
 		code     int
@@ -53,15 +60,17 @@ func TestShortenURL(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		test := test
 		t.Run(test.name, func(t *testing.T) {
 			w := httptest.NewRecorder()
 			с, _ := gin.CreateTestContext(w)
 
 			с.Request, _ = http.NewRequest(test.method, test.url, strings.NewReader(test.body))
-
+			serviceContainer, err := service.NewServiceContainer(testVault, cfg, storage, nil)
+			if err != nil {
+				fmt.Printf("Error creating service container: %v", err)
+			}
 			h := Handler{
-				services: storage.NewServiceContainer(testVault, appConfig),
+				services: serviceContainer,
 			}
 			h.ShortenURL(с)
 
