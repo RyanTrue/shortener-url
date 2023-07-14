@@ -1,6 +1,8 @@
 package main
 
 import (
+	"go.uber.org/zap"
+
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
 	"github.com/RyanTrue/shortener-url.git/internal/common/handler"
 	"github.com/RyanTrue/shortener-url.git/internal/common/repository"
@@ -8,7 +10,6 @@ import (
 	"github.com/RyanTrue/shortener-url.git/internal/common/service"
 
 	_ "github.com/lib/pq"
-	"go.uber.org/zap"
 )
 
 func main() {
@@ -27,7 +28,7 @@ func main() {
 
 	repo := make(map[string]string)
 
-	storage, err := service.NewStorage(appConfig.Server.TempFolder)
+	storage, err := service.NewStorage(appConfig.Server.TempDirectory)
 	if err != nil {
 		panic(err)
 	}
