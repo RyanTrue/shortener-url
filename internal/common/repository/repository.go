@@ -29,13 +29,14 @@ func NewRepositoryContainer(cfg config.AppConfig) (*RepositoryContainer, error) 
 		}
 		query := `CREATE TABLE IF NOT EXISTS urls (
 			id SERIAL PRIMARY KEY,
-			shortURL TEXT,
-			OriginalURL TEXT
+			correlationid TEXT,
+			shorturl TEXT,
+			originalurl TEXT
 		)`
 		if _, err := db.Exec(query); err != nil {
 			return nil, err
 		}
-		// defer db.Close()
+
 		ur = NewPostgresURLrepo(db)
 
 	} else if cfg.Server.TempFolder != "" {
