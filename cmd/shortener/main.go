@@ -1,25 +1,41 @@
 package main
 
 import (
-	"flag"
-	"log"
-
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
+	"github.com/RyanTrue/shortener-url.git/internal/common/handler"
+	"github.com/RyanTrue/shortener-url.git/internal/common/logger"
+	"github.com/RyanTrue/shortener-url.git/internal/common/repository"
 	"github.com/RyanTrue/shortener-url.git/internal/common/server"
-	"github.com/RyanTrue/shortener-url.git/internal/common/server/handler"
-	"github.com/RyanTrue/shortener-url.git/internal/common/storage"
+	"github.com/RyanTrue/shortener-url.git/internal/common/service"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
 	appConfig := config.AppConfig{}
-	appConfig.InitAppConfig()
-	flag.Parse()
+	err := appConfig.InitAppConfig()
+	if err != nil {
+		panic(err)
+	}
 
-	services := storage.NewServiceContainer(make(map[string]string), appConfig)
+	err = logger.InitLogger()
+	if err != nil {
+		panic(err)
+	}
+
+	repo, err := repository.NewRepositoryContainer(appConfig)
+	if err != nil {
+		panic(err)
+	}
+
+	services, err := service.NewServiceContainer(repo, appConfig)
+	if err != nil {
+		panic(err)
+	}
 	handler := handler.NewHandler(services)
-	server := &server.Server{}
+	server := new(server.Server)
 
 	if err := server.Run(appConfig.Server.ServerAddr, handler.InitRoutes()); err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 }
