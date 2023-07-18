@@ -1,10 +1,9 @@
 package main
 
 import (
-	"go.uber.org/zap"
-
 	"github.com/RyanTrue/shortener-url.git/internal/common/config"
 	"github.com/RyanTrue/shortener-url.git/internal/common/handler"
+	"github.com/RyanTrue/shortener-url.git/internal/common/logger"
 	"github.com/RyanTrue/shortener-url.git/internal/common/repository"
 	"github.com/RyanTrue/shortener-url.git/internal/common/server"
 	"github.com/RyanTrue/shortener-url.git/internal/common/service"
@@ -19,40 +18,24 @@ func main() {
 		panic(err)
 	}
 
-	logger, err := zap.NewDevelopment()
-	if err != nil {
-		panic(err)
-	}
-	defer logger.Sync()
-	sugar := logger.Sugar()
-
-	repo := make(map[string]string)
-
-	storage, err := service.NewStorage(appConfig.Server.TempDirectory)
+	err = logger.InitLogger()
 	if err != nil {
 		panic(err)
 	}
 
-	err = storage.Read(&repo)
+	repo, err := repository.NewRepositoryContainer(appConfig)
 	if err != nil {
 		panic(err)
 	}
 
-	db, err := repository.NewPostgresDB(appConfig.DataBase.ConnectionStr)
-	if err != nil {
-		panic(err)
-	}
-
-	PostgresRepo := repository.NewRepository(db)
-
-	services, err := service.NewServiceContainer(repo, appConfig, storage, PostgresRepo)
+	services, err := service.NewServiceContainer(repo, appConfig)
 	if err != nil {
 		panic(err)
 	}
 	handler := handler.NewHandler(services)
 	server := new(server.Server)
 
-	if err := server.Run(appConfig.Server.ServerAddr, handler.InitRoutes(sugar)); err != nil {
+	if err := server.Run(appConfig.Server.ServerAddr, handler.InitRoutes()); err != nil {
 		panic(err)
 	}
 }

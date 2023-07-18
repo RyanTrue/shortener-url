@@ -1,4 +1,4 @@
-package service
+package repository
 
 import (
 	"bufio"
@@ -8,21 +8,39 @@ import (
 	"os"
 	"path"
 
+	"github.com/RyanTrue/shortener-url.git/internal/common/logger"
 	"github.com/RyanTrue/shortener-url.git/internal/common/models"
 )
 
-type Storage struct {
+type FileURLrepo struct {
+	storage     map[string]string
 	path        string
 	largestUUID int
 }
 
-func NewStorage(path string) (*Storage, error) {
-	return &Storage{
-		path: path,
-	}, nil
+func NewFileURLrepo(path string) (*FileURLrepo, error) {
+	fileRepo := FileURLrepo{
+		storage: map[string]string{},
+		path:    path,
+	}
+
+	if err := fileRepo.Read(); err != nil {
+		return nil, err
+	}
+	return &fileRepo, nil
 }
 
-func (s *Storage) Write(uj *models.URLJson) error {
+func (s *FileURLrepo) Create(shortURL, originalURL string) error {
+	logger.Log.Infof("Writing to file... ShortURL: %s, OriginalURL: %s", shortURL, originalURL)
+
+	uj := models.URLJson{
+		UUID:        s.largestUUID + 1,
+		ShortURL:    shortURL,
+		OriginalURL: originalURL,
+	}
+	s.largestUUID += 1
+	s.storage[shortURL] = originalURL
+
 	file, err := os.OpenFile(s.path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
 		return fmt.Errorf("error opening file to write: %v", err)
@@ -50,7 +68,8 @@ func (s *Storage) Write(uj *models.URLJson) error {
 	return nil
 }
 
-func (s *Storage) Read(repo *map[string]string) error {
+func (s *FileURLrepo) Read() error {
+	logger.Log.Infof("Starting to read file...")
 	file, err := os.OpenFile(s.path, os.O_RDONLY|os.O_CREATE, 0777)
 	if err != nil {
 		return fmt.Errorf("error opening file to read: %v", err)
@@ -72,7 +91,7 @@ func (s *Storage) Read(repo *map[string]string) error {
 			return err
 		}
 		shortURL := path.Base(url.Path)
-		(*repo)[shortURL] = uj.OriginalURL
+		s.storage[shortURL] = uj.OriginalURL
 
 		if uj.UUID > largestUUID {
 			largestUUID = uj.UUID
@@ -80,6 +99,10 @@ func (s *Storage) Read(repo *map[string]string) error {
 
 		s.largestUUID = largestUUID
 	}
-
+	logger.Log.Infof("File has been read")
 	return nil
+}
+
+func (s FileURLrepo) OriginalURL(shortURL string) (string, error) {
+	return s.storage[shortURL], nil
 }
